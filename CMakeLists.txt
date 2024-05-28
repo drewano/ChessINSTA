@@ -1,15 +1,28 @@
-cmake_minimum_required(VERSION 3.26)
-project(ChessINSTA C)
+cmake_minimum_required(VERSION 3.10)
+project(ChessINSTA)
 
-set(CMAKE_C_STANDARD 17)
-set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake_modules)
+set(CMAKE_C_STANDARD 99)
 
-set(SDL2_PATH "C:/SDL2-2.28.4/x86_64-w64-mingw32")
+# Définir les chemins vers les répertoires include et lib de SDL et SDL_image
+set(SDL2_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/SDL2/include)
+set(SDL2_LIB_DIR ${CMAKE_SOURCE_DIR}/SDL2/lib)
+set(SDL2_IMAGE_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/SDL2_image/include)
+set(SDL2_IMAGE_LIB_DIR ${CMAKE_SOURCE_DIR}/SDL2_image/lib)
 
-find_package(SDL2 REQUIRED)
-include_directories(${SDL2_INCLUDE_DIR})
+# Ajouter les répertoires d'inclusion
+include_directories(${SDL2_INCLUDE_DIR} ${SDL2_IMAGE_INCLUDE_DIR})
 
-add_executable(ChessINSTA main.c)
+# Ajouter les répertoires de bibliothèque
+link_directories(${SDL2_LIB_DIR} ${SDL2_IMAGE_LIB_DIR})
 
-target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARY})
+# Définir les fichiers source
+set(SOURCE_FILES main.c)
 
+# Ajouter l'exécutable
+add_executable(ChessINSTA ${SOURCE_FILES})
+
+# Ajouter la définition pour utiliser SDL_main avec MinGW
+target_compile_definitions(ChessINSTA PRIVATE "-Dmain=SDL_main")
+
+# Lier les bibliothèques SDL2, SDL2_image et SDL2main
+target_link_libraries(ChessINSTA SDL2 SDL2_image SDL2main)
